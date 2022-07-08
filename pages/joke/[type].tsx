@@ -1,24 +1,17 @@
-import type { NextPage, NextPageContext } from 'next';
+import type { NextPage } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Button from '../../components/button';
 import MainContainer from '../../components/MainContainer';
-
-
-const asyncPipe =
-  (...fns: any[]) =>
-    (x: any) =>
-      fns.reduce(async (f, y) => y(await f), x);
-
-const toJson = (response: Response) => response.json();
-
-const request = asyncPipe(fetch, toJson);
-
+import { useJokeModel } from '../../models/joke/useJokeModel';
 
 interface PageProps {
   joke: string;
 }
 
 const Joke: NextPage<PageProps> = ({ joke }) => {
+  const { view } = useJokeModel();
+  const {query} = useRouter()
 
   return (
     <div>
@@ -30,24 +23,12 @@ const Joke: NextPage<PageProps> = ({ joke }) => {
 
       <MainContainer>
         <div>
-          <h3 style={{ textAlign: 'center' }}>{joke}</h3>
-          <Button>Show Joke</Button>
+          <h3 style={{ textAlign: 'center' }}>{view?.joke}</h3>
+          <Button onClick={() => view.handleGetSingleJoke(query?.joke as string)}>Show Joke</Button>
         </div>
       </MainContainer>
     </div>
   );
 };
-
-export async function getServerSideProps(params: NextPageContext) {
-  const { query } = params
-
-  const type = await request(`https://v2.jokeapi.dev/joke/${query.type}?type=single`);
-
-  console.log("type",type)
-
-  return {
-    props: { joke: type.joke }
-  }
-}
 
 export default Joke;

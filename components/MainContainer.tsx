@@ -9,8 +9,7 @@ const Container = styled.div`
   padding: 10px 20px;
   width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 `
 
 const MainContainer = ({ children }: props) => {
