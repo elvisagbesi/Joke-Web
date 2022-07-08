@@ -1,18 +1,22 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Button from '../components/button';
+import Link from 'next/link';
+import { useState } from 'react';
+import Button, { SubmitButton } from '../components/button';
 import FlexContainer from '../components/FlexContainer';
 import MainContainer from '../components/MainContainer';
 
 const Home: NextPage = () => {
   const JokeTypes = [
     'Programming',
-    'Misc',
+    'Miscellaneous',
     'Dark',
     'Pun',
     'Spooky',
     'Christmas',
   ];
+
+  const [joke, setjoke] = useState<string>();
 
   return (
     <div>
@@ -25,13 +29,18 @@ const Home: NextPage = () => {
       <MainContainer>
         <div>
           <h3 style={{ textAlign: 'center' }}>Welcome to Joke web</h3>
-          <p style={{ textAlign: 'center', color: "#0000005e" }}>Select Joke type to begin</p>
+          {
+            joke === undefined ?
+              <p style={{ textAlign: 'center', color: "#0000005e" }}>Select Joke type to begin</p>
+              :
+              <p style={{ textAlign: 'center', color: "#0000005e" }}>Selected <b>"{joke}"</b></p>
+          }
           <FlexContainer>
-          {JokeTypes.map(joketype => (
-            <Button>{joketype}</Button>
-          ))}
+            {JokeTypes.map(joketype => (
+              <Button onClick={() => setjoke(joketype)}>{joketype}</Button>
+            ))}
+            <Link href={`/joke/${joke}`}><SubmitButton >Get Joke</SubmitButton></Link>
           </FlexContainer>
-          <Button>Begin Process</Button>
         </div>
       </MainContainer>
     </div>
